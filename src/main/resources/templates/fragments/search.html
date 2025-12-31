@@ -1,0 +1,136 @@
+<!-- fragments/search.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- 搜索组件及结果 -->
+    <div th:fragment="search-component" class="relative w-full max-w-2xl">
+        <div class="join w-full shadow-lg">
+            <select class="select select-bordered join-item w-24" id="searchEngineSelect">
+                <option value="baidu" selected>百度</option>
+                <option value="bing">必应</option>
+                <option value="google">谷歌</option>
+                <option value="local">站内</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="搜索网站或使用搜索引擎..."
+                   class="input input-bordered join-item flex-1" autocomplete="off"/>
+            <button class="btn btn-primary join-item" id="searchBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- 站内搜索结果 -->
+        <div id="searchResults" class="hidden mt-2 card bg-base-100 shadow-xl max-h-96 overflow-y-auto absolute top-full left-0 w-full z-[9998] rounded-box border">
+            <!-- 动态内容 -->
+        </div>
+    </div>
+
+    <!-- 搜索功能的JavaScript代码 -->
+    <th:block th:fragment="search-js">
+        <script th:inline="javascript">
+            // 搜索功能JavaScript
+            document.addEventListener('DOMContentLoaded', function() {
+                const searchInput = document.getElementById('searchInput');
+                const searchBtn = document.getElementById('searchBtn');
+                const searchEngineSelect = document.getElementById('searchEngineSelect');
+                const searchResults = document.getElementById('searchResults');
+
+                // 搜索功能
+                function performSearch() {
+                    const keyword = searchInput.value.trim();
+                    const engine = searchEngineSelect.value;
+
+                    if (keyword === '') {
+                        return;
+                    }
+
+                    if (engine === 'local') {
+                        // 显示站内搜索结果
+                        fetch('/api/search?keyword=' + encodeURIComponent(keyword))
+                            .then(response => response.json())
+                            .then(data => {
+                                displayLocalSearchResults(data);
+                            })
+                            .catch(error => {
+                                console.error('搜索错误:', error);
+                                searchResults.innerHTML = '<div class="p-4">搜索出错，请稍后重试</div>';
+                                searchResults.classList.remove('hidden');
+                            });
+                    } else {
+                        // 外部搜索引擎
+                        let searchUrl = '';
+                        switch(engine) {
+                            case 'baidu':
+                                searchUrl = 'https://www.baidu.com/s?wd=';
+                                break;
+                            case 'bing':
+                                searchUrl = 'https://www.bing.com/search?q=';
+                                break;
+                            case 'google':
+                                searchUrl = 'https://www.google.com/search?q=';
+                                break;
+                            default:
+                                searchUrl = 'https://www.baidu.com/s?wd=';
+                        }
+                        window.open(searchUrl + encodeURIComponent(keyword), '_blank');
+                    }
+                }
+
+                // 显示站内搜索结果
+                function displayLocalSearchResults(results) {
+                    if (results.length === 0) {
+                        searchResults.innerHTML = '<div class="p-4">未找到相关结果</div>';
+                    } else {
+                        let html = '<ul class="menu">';
+                        results.forEach(item => {
+                            html += `<li><a href="${item.url}" target="_blank" class="p-2 hover:bg-base-200">${item.name} - ${item.description}</a></li>`;
+                        });
+                        html += '</ul>';
+                        searchResults.innerHTML = html;
+                    }
+                    searchResults.classList.remove('hidden');
+                }
+
+                // 绑定搜索按钮点击事件
+                searchBtn.addEventListener('click', performSearch);
+
+                // 绑定回车键搜索
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+
+                // 站内搜索实时提示
+                let searchTimeout;
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    const keyword = this.value.trim();
+
+                    if (keyword.length === 0) {
+                        searchResults.classList.add('hidden');
+                        return;
+                    }
+
+                    const engine = searchEngineSelect.value;
+                    if (engine === 'local') {
+                        searchTimeout = setTimeout(() => {
+                            performSearch();
+                        }, 300);
+                    }
+                });
+
+                // 点击其他地方隐藏搜索结果
+                document.addEventListener('click', function(e) {
+                    if (!searchResults.contains(e.target) && !searchInput.contains(e.target) && !searchEngineSelect.contains(e.target)) {
+                        searchResults.classList.add('hidden');
+                    }
+                });
+            });
+        </script>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,93 @@
+/* Custom styles for daisyUI theme */
+/* 侧边栏收缩状态 */
+#sidebar.collapsed {
+    width: 5rem;
+}
+
+#sidebar.collapsed #sidebarTitleText,
+#sidebar.collapsed .category-name,
+#sidebar.collapsed .category-actions,
+#sidebar.collapsed .add-category-btn span {
+    display: none;
+}
+
+#sidebar.collapsed .menu li > * {
+    justify-content: center;
+}
+
+/* 侧边栏切换按钮图标动画 */
+#sidebar.collapsed #toggleIcon {
+    transform: rotate(180deg);
+}
+
+#toggleIcon {
+    transition: transform 0.3s ease;
+}
+
+/* 侧边栏展开收起按钮样式 - 一半在导航内，一半在导航外 */
+/*#sidebarToggle {*/
+/*    position: relative;*/
+/*    z-index: 10;*/
+/*    margin-right: -2rem;*/
+
+/*}*/
+
+/*#sidebar.collapsed #sidebarToggle {*/
+/*    margin-right: -2rem;*/
+/*}*/
+
+/* 分类操作按钮 - 默认隐藏 */
+.category-actions {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.category-link:hover .category-actions {
+    opacity: 1;
+}
+
+/* 平滑滚动 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 搜索结果动画 */
+#searchResults {
+    animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Sortable拖拽样式 */
+.sortable-ghost {
+    opacity: 0.4;
+}
+
+.sortable-drag {
+    opacity: 0.8;
+}
+
+/* 响应式调整 */
+@media (max-width: 1024px) {
+    #sidebar {
+        position: fixed;
+        left: -16rem;
+        top: 4rem;
+        height: calc(100vh - 4rem);
+        z-index: 40;
+        transition: left 0.3s ease;
+    }
+
+    #sidebar.show {
+        left: 0;
+    }
+}

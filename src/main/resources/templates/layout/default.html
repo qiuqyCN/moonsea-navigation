@@ -1,0 +1,35 @@
+<!-- default.html - 基础布局模板 -->
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">月海导航</title>
+
+    <!-- Tailwind CSS + daisyUI -->
+    <link th:href="@{/css/daisyui5.css}" rel="stylesheet" type="text/css" />
+    <script th:src="@{/js/tailwindcss4.js}"></script>
+    <!-- 定义 CSS 片段占位符，供子页面插入特定 CSS -->
+    <th:block layout:fragment="css"></th:block>
+</head>
+<body>
+    <!-- 公共头部 -->
+    <header th:replace="~{fragments/header :: nav}"></header>
+
+    <!-- 主要内容区 -->
+    <main layout:fragment="content"></main>
+
+    <!-- 公共页脚 -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+    <!-- 右下角固定图标 -->
+    <div th:replace="~{fragments/fixed-buttons :: fixed-buttons}"></div>
+    <th:block th:replace="~{fragments/fixed-buttons :: fixed-buttons-js}"></th:block>
+
+    <!-- 定义 JavaScript 片段占位符，供子页面插入特定 JS -->
+    <th:block layout:fragment="javascript"></th:block>
+</body>
+</html>

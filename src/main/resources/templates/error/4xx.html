@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${status + ' - 客户端错误 - 月海导航'}">4xx - 客户端错误 - 月海导航</title>
+    <meta name="description" content="客户端错误 - 月海导航">
+
+    <!-- Tailwind CSS + daisyUI -->
+    <link th:href="@{/css/daisyui5.css}" rel="stylesheet" type="text/css" />
+    <script th:src="@{/js/tailwindcss4.js}"></script>
+</head>
+<body>
+    <main class="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
+        <div class="text-center">
+            <h1 id="status" class="text-5xl font-semibold text-indigo-600" th:text="${status} ?: '4xx'">4xx</h1>
+            <h2 id="error" class="mt-4 text-2xl font-semibold tracking-tight text-balance text-gray-900 sm:text-3xl" th:text="${error} ?: '客户端错误'">客户端错误</h2>
+            <p id="message" class="mt-6 text-base font-medium text-pretty text-gray-500 sm:text-lg" th:text="${message} ?: '您请求的页面出现了客户端错误。'">您请求的页面出现了客户端错误。</p>
+            <div class="mt-10 flex items-center justify-center gap-x-6">
+                <a href="/" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">返回首页</a>
+                <a href="#" onclick="history.back(); return false;" class="text-sm font-semibold text-gray-900">返回上页</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

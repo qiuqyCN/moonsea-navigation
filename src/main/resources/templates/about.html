@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/default}">
+<head>
+    <title>关于</title>
+</head>
+
+<th:block layout:fragment="content">
+    <!-- 主内容 -->
+    <div class="mx-auto px-4 py-12 max-w-6xl mt-16">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h1 class="card-title text-3xl mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    关于月海导航
+                </h1>
+
+                <div class="prose max-w-none">
+                    <div class="alert alert-info mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>一个简洁高效的个人网址导航网站</span>
+                    </div>
+
+                    <div class="space-y-6">
+                        <section>
+                            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                                </svg>
+                                功能特性
+                            </h2>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="card bg-base-200">
+                                    <div class="card-body">
+                                        <h3 class="card-title text-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                                            </svg>
+                                            网站分类管理
+                                        </h3>
+                                        <p class="text-sm">自定义分类，灵活组织您的网站书签</p>
+                                    </div>
+                                </div>
+                                <div class="card bg-base-200">
+                                    <div class="card-body">
+                                        <h3 class="card-title text-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                            </svg>
+                                            快速搜索
+                                        </h3>
+                                        <p class="text-sm">支持站内搜索和多引擎搜索</p>
+                                    </div>
+                                </div>
+                                <div class="card bg-base-200">
+                                    <div class="card-body">
+                                        <h3 class="card-title text-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                            </svg>
+                                            用户认证
+                                        </h3>
+                                        <p class="text-sm">登录后管理个人导航数据</p>
+                                    </div>
+                                </div>
+                                <div class="card bg-base-200">
+                                    <div class="card-body">
+                                        <h3 class="card-title text-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                                            </svg>
+                                            拖拽排序
+                                        </h3>
+                                        <p class="text-sm">拖拽即可调整网站和分类顺序</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="divider"></div>
+
+                        <section>
+                            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                </svg>
+                                技术栈
+                            </h2>
+                            <div class="flex flex-wrap gap-2">
+                                <div class="badge badge-primary badge-lg">Spring Boot</div>
+                                <div class="badge badge-secondary badge-lg">Spring Security</div>
+                                <div class="badge badge-accent badge-lg">PostgreSQL</div>
+                                <div class="badge badge-info badge-lg">Thymeleaf</div>
+                                <div class="badge badge-success badge-lg">Tailwind CSS</div>
+                                <div class="badge badge-warning badge-lg">daisyUI</div>
+                                <div class="badge badge-error badge-lg">JPA/Hibernate</div>
+                            </div>
+                        </section>
+
+                        <div class="divider"></div>
+
+                        <section>
+                            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                联系方式
+                            </h2>
+                            <div class="space-y-2">
+                                <p class="flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                    <strong>邮箱：</strong> contact@moonsea.cc
+                                </p>
+                                <p class="flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                                    </svg>
+                                    <strong>网站：</strong> https://moonsea.cc
+                                </p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="card-actions justify-end mt-8">
+                    <a href="/" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        返回首页
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</html>
