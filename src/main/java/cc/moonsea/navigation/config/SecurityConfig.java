@@ -35,7 +35,7 @@ public class SecurityConfig {
                         "/images/**",
                         "/api/search"
                 ).permitAll()
-                .requestMatchers("/api/categories/**", "/api/websites/**").authenticated()
+                .requestMatchers("/api/auth/change-password", "/api/categories/**", "/api/websites/**").authenticated()
                 .anyRequest().permitAll()
             )
             .formLogin(form -> form

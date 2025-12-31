@@ -1,9 +1,14 @@
 package cc.moonsea.navigation.service;
 
+import cc.moonsea.navigation.dto.ChangePasswordRequest;
 import cc.moonsea.navigation.dto.RegisterRequest;
 import cc.moonsea.navigation.entity.User;
 import cc.moonsea.navigation.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -61,5 +65,27 @@ public class UserService implements UserDetailsService {
     
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
+    }
+    
+    @Transactional
+    public boolean changePassword(Long userId, ChangePasswordRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("用户不存在"));
+        
+        // 验证当前密码是否正确
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("当前密码不正确");
+        }
+        
+        // 验证新密码和确认密码是否一致
+        if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
+            throw new RuntimeException("新密码和确认密码不一致");
+        }
+        
+        // 更新密码
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        
+        return true;
     }
 }
