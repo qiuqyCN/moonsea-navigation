@@ -7,6 +7,7 @@ import cc.moonsea.navigation.entity.Website;
 import cc.moonsea.navigation.repository.CategoryRepository;
 import cc.moonsea.navigation.repository.UserRepository;
 import cc.moonsea.navigation.repository.WebsiteRepository;
+import cc.moonsea.navigation.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -23,6 +24,7 @@ public class DataInitializer implements CommandLineRunner {
     private final CategoryRepository categoryRepository;
     private final WebsiteRepository websiteRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final AppConfig appConfig;
 
@@ -162,15 +164,11 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
-    private User getDefaultUser() {
-        String defaultUsername = appConfig.getDefaultUser().getUsername();
-        return userRepository.findByUsername(defaultUsername)
-                .orElseThrow(() -> new RuntimeException("默认用户不存在"));
-    }
+
 
     private Category createCategory(String name, String icon, int sortOrder) {
         // 获取默认用户
-        User defaultUser = getDefaultUser();
+        User defaultUser = userService.getDefaultUser();
 
         Category category = new Category();
         category.setName(name);

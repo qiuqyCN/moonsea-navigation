@@ -1,7 +1,9 @@
 package cc.moonsea.navigation.service;
 
+import cc.moonsea.navigation.config.AppConfig;
 import cc.moonsea.navigation.dto.WebsiteRequest;
 import cc.moonsea.navigation.entity.Category;
+import cc.moonsea.navigation.entity.User;
 import cc.moonsea.navigation.entity.Website;
 import cc.moonsea.navigation.repository.CategoryRepository;
 import cc.moonsea.navigation.repository.WebsiteRepository;
@@ -18,13 +20,11 @@ public class WebsiteService {
     private final WebsiteRepository websiteRepository;
     private final CategoryRepository categoryRepository;
 
-    public List<Website> getWebsitesByCategory(Category category) {
-        return websiteRepository.findByCategoryOrderBySortOrderAsc(category);
+
+    public List<Website> searchWebsitesByUser(String keyword, User user) {
+        return websiteRepository.searchByKeywordAndUser(keyword, user);
     }
 
-    public List<Website> searchWebsites(String keyword) {
-        return websiteRepository.searchByKeyword(keyword);
-    }
 
     @Transactional
     public Website createWebsite(WebsiteRequest dto, Long userId) {
