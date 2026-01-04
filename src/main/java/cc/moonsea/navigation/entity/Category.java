@@ -13,7 +13,6 @@ import java.util.List;
 @Entity
 @Table(name = "categories", indexes = {
     @Index(name = "idx_category_user_id", columnList = "user_id"),
-    @Index(name = "idx_category_is_default", columnList = "is_default"),
     @Index(name = "idx_category_sort_order", columnList = "sort_order"),
     @Index(name = "idx_category_user_sort", columnList = "user_id, sort_order")
 })
@@ -21,43 +20,42 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Category {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(nullable = false, length = 100)
     private String name;
-    
+
     @Column(length = 50)
     private String icon;
-    
+
     @Column(name = "sort_order")
     private Integer sortOrder = 0;
-    
-    @Column(name = "is_default")
-    private Boolean isDefault = false;
-    
+
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private List<Website> websites = new ArrayList<>();
-    
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-    
+
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-    
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
-    
+
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();

@@ -1,9 +1,11 @@
 package cc.moonsea.navigation.service;
 
+import cc.moonsea.navigation.config.AppConfig;
 import cc.moonsea.navigation.dto.CategoryDTO;
 import cc.moonsea.navigation.entity.Category;
 import cc.moonsea.navigation.entity.User;
 import cc.moonsea.navigation.repository.CategoryRepository;
+import cc.moonsea.navigation.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +18,20 @@ import java.util.stream.Collectors;
 public class CategoryService {
     
     private final CategoryRepository categoryRepository;
+    private final AppConfig appConfig;
+    private final UserRepository userRepository;
     
     public List<Category> getDefaultCategories() {
-        return categoryRepository.findDefaultCategoriesWithWebsites();
+        // 获取默认用户
+        User defaultUser = getDefaultUser();
+        return categoryRepository.findByUserWithWebsites(defaultUser);
+    }
+    
+    private User getDefaultUser() {
+        // 从配置中获取默认用户的用户名
+        String defaultUsername = appConfig.getDefaultUser().getUsername();
+        return userRepository.findByUsername(defaultUsername)
+                .orElseThrow(() -> new RuntimeException("默认用户不存在"));
     }
     
     public List<Category> getUserCategories(User user) {
@@ -29,9 +42,10 @@ public class CategoryService {
     public Category createCategory(CategoryDTO dto, User user) {
         Category category = new Category();
         category.setName(dto.getName());
-        category.setIcon(dto.getIcon());
+        // 如果没有提供图标路径，则使用默认SVG图标
+        category.setIcon(dto.getIcon() != null && !dto.getIcon().trim().isEmpty() ? dto.getIcon() : "/images/icons/tag.svg");
         category.setSortOrder(dto.getSortOrder() != null ? dto.getSortOrder() : 0);
-        category.setIsDefault(false);
+
         category.setUser(user);
         
         return categoryRepository.save(category);
@@ -47,7 +61,8 @@ public class CategoryService {
         }
         
         category.setName(dto.getName());
-        category.setIcon(dto.getIcon());
+        // 如果没有提供图标路径，则使用默认SVG图标
+        category.setIcon(dto.getIcon() != null && !dto.getIcon().trim().isEmpty() ? dto.getIcon() : "/images/icons/tag.svg");
         category.setSortOrder(dto.getSortOrder());
         
         return categoryRepository.save(category);

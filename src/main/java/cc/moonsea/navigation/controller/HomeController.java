@@ -25,7 +25,7 @@ public class HomeController {
         boolean isAuthenticated = false;
 
         if (authentication != null && authentication.isAuthenticated() &&
-            !authentication.getPrincipal().equals("anonymousUser")) {
+            !"anonymousUser".equals(authentication.getPrincipal())) {
             String username = authentication.getName();
             User user = userService.findByUsername(username).orElse(null);
 

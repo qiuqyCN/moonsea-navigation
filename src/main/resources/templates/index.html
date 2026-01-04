@@ -47,18 +47,9 @@
                     <ul class="menu menu-sm p-0 gap-3 w-full" id="categoryList">
                         <li th:each="category : ${categories}" th:attr="data-category-id=${category.id}">
                             <a th:data-tip="${category.name}" th:href="'#category-' + ${category.id}" class="tooltip flex category-link gap-3">
-                                <svg th:if="${category.icon != null and #strings.startsWith(category.icon, '/images/icons/')}"
+                                <svg th:if="${category.icon != null and !category.icon.isBlank()}"
                                      class="h-4 w-4 category-icon">
                                     <use th:href="${category.icon}"></use>
-                                </svg>
-                                <svg th:unless="${category.icon != null and #strings.startsWith(category.icon, '/images/icons/')}"
-                                     xmlns="http://www.w3.org/2000/svg"
-                                     class="h-4 w-4 category-icon"
-                                     fill="none"
-                                     viewBox="0 0 24 24"
-                                     stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
                                 </svg>
                                 <span class="category-name text-lg" th:text="${category.name}">分类名称</span>
                                 <div class="category-actions flex gap-0.25 ml-auto" sec:authorize="isAuthenticated()" style="display: none;">
@@ -99,18 +90,9 @@
                 <div th:each="category : ${categories}" th:id="'category-' + ${category.id}" class="mb-12 scroll-mt-24">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-2xl font-bold flex items-center gap-3">
-                            <svg th:if="${category.icon != null and #strings.startsWith(category.icon, '/images/icons/')}"
+                            <svg th:if="${category.icon != null and !category.icon.isBlank()}"
                                  class="h-6 w-6">
                                 <use th:href="${category.icon}"></use>
-                            </svg>
-                            <svg th:unless="${category.icon != null and #strings.startsWith(category.icon, '/images/icons/')}"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 class="h-6 w-6"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
                             </svg>
                             <span th:text="${category.name}">分类名称</span>
                         </h2>
@@ -204,7 +186,7 @@
                         <input type="text" id="categoryIcon" placeholder="/images/icons/chat-bubble-left-right.svg"
                                class="input input-bordered"/>
                         <label class="label">
-                            <span class="label-text-alt">可选，留空使用默认图标，例如: /images/icons/chat-bubble-left-right.svg</span>
+                            <span class="label-text-alt">可选，留空使用默认图标，例如: /images/icons/tag.svg</span>
                         </label>
                     </div>
                 </form>

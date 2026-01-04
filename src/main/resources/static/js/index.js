@@ -539,7 +539,7 @@ function removeSortable() {
 
 // 更新分类排序
 function updateCategorySortOrder(sortData) {
-    fetch('/api/categories/sort', {
+    fetch('/api/categories/reorder', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -554,7 +554,7 @@ const debouncedUpdateCategorySortOrder = debounce(updateCategorySortOrder, 500);
 
 // 更新网址排序
 function updateWebsiteSortOrder(sortData) {
-    fetch('/api/websites/sort', {
+    fetch('/api/websites/reorder', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
