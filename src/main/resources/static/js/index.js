@@ -41,9 +41,15 @@ document.addEventListener('DOMContentLoaded', function() {
 function initEditModeToggle() {
     const editModeToggle = document.getElementById('editModeToggle');
     if (editModeToggle) {
-        editModeToggle.addEventListener('click', function() {
-            toggleEditMode();
-        });
+        // 检查用户是否已认证，未认证用户无法使用编辑模式
+        if (!window.isPageAuthenticated) {
+            // 隐藏编辑模式按钮或禁用它
+            editModeToggle.style.display = 'none';
+        } else {
+            editModeToggle.addEventListener('click', function() {
+                toggleEditMode();
+            });
+        }
     }
 }
 
@@ -485,12 +491,11 @@ function initSortable() {
             handle: '.category-link',
             onEnd: function(evt) {
                 const items = categoryList.querySelectorAll('li[data-category-id]');
-                const sortData = Array.from(items).map((item, index) => ({
-                    id: item.getAttribute('data-category-id'),
-                    sortOrder: index
-                }));
+                const categoryIds = Array.from(items).map(item => {
+                    return item.getAttribute('data-category-id');
+                });
 
-                debouncedUpdateCategorySortOrder(sortData);
+                debouncedUpdateCategorySortOrder(categoryIds);
             }
         });
     }
@@ -503,12 +508,11 @@ function initSortable() {
                 onEnd: function(evt) {
                     const categoryId = grid.getAttribute('data-category-id');
                     const items = grid.querySelectorAll('[data-website-id]');
-                    const sortData = Array.from(items).map((item, index) => ({
-                        id: item.getAttribute('data-website-id'),
-                        sortOrder: index
-                    }));
+                    const websiteIds = Array.from(items).map(item => {
+                        return item.getAttribute('data-website-id');
+                    });
 
-                    debouncedUpdateWebsiteSortOrder(sortData);
+                    debouncedUpdateWebsiteSortOrder(websiteIds);
                 }
             });
         }
@@ -588,6 +592,22 @@ function initSmoothScroll() {
 
 // 恢复编辑模式状态
 function restoreEditModeState() {
+    // 检查用户是否已认证
+    const isAuthenticated = window.isPageAuthenticated;
+    
+    // 如果用户未认证，编辑模式默认关闭
+    if (!isAuthenticated) {
+        editMode = false;
+        const editModeToggle = document.getElementById('editModeToggle');
+        if (editModeToggle) {
+            editModeToggle.classList.remove('btn-primary');
+            editModeToggle.classList.add('btn-outline');
+        }
+        hideEditElements();
+        removeSortable();
+        return;
+    }
+    
     // 检查URL参数中是否有editMode=true
     const urlParams = new URLSearchParams(window.location.search);
     const urlEditMode = urlParams.get('editMode');

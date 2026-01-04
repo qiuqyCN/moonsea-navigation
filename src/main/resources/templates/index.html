@@ -271,6 +271,9 @@
     <script th:src="@{/js/Sortable.min1.15.0.js}"></script>
     <!-- 搜索功能JavaScript -->
     <th:block th:replace="~{fragments/search :: search-js}"></th:block>
+    <script th:inline="javascript">
+        window.isPageAuthenticated = /*[[${isAuthenticated}]]*/ false;
+    </script>
     <script th:src="@{/js/index.js}"></script>
 </th:block>
 
