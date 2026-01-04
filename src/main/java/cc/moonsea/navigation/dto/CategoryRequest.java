@@ -7,12 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WebsiteDTO {
+public class CategoryRequest {
     private Long id;
     private String name;
-    private String url;
-    private String description;
-    private String logo;
+    private String icon;
     private Integer sortOrder;
-    private Long categoryId;
 }

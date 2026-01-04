@@ -1,6 +1,6 @@
 package cc.moonsea.navigation.controller;
 
-import cc.moonsea.navigation.dto.WebsiteDTO;
+import cc.moonsea.navigation.dto.WebsiteRequest;
 import cc.moonsea.navigation.entity.User;
 import cc.moonsea.navigation.entity.Website;
 import cc.moonsea.navigation.service.UserService;
@@ -16,12 +16,12 @@ import java.util.List;
 @RequestMapping("/api/websites")
 @RequiredArgsConstructor
 public class WebsiteController {
-    
+
     private final WebsiteService websiteService;
     private final UserService userService;
-    
+
     @PostMapping
-    public ResponseEntity<?> createWebsite(@RequestBody WebsiteDTO dto, Authentication authentication) {
+    public ResponseEntity<?> createWebsite(@RequestBody WebsiteRequest dto, Authentication authentication) {
         try {
             User user = userService.findByUsername(authentication.getName())
                     .orElseThrow(() -> new RuntimeException("用户不存在"));
@@ -31,10 +31,10 @@ public class WebsiteController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateWebsite(@PathVariable Long id, 
-                                          @RequestBody WebsiteDTO dto, 
+    public ResponseEntity<?> updateWebsite(@PathVariable Long id,
+                                          @RequestBody WebsiteRequest dto,
                                           Authentication authentication) {
         try {
             User user = userService.findByUsername(authentication.getName())
@@ -45,7 +45,7 @@ public class WebsiteController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteWebsite(@PathVariable Long id, Authentication authentication) {
         try {
@@ -57,9 +57,9 @@ public class WebsiteController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    
+
     @PostMapping("/reorder")
-    public ResponseEntity<?> reorderWebsites(@RequestBody List<Long> websiteIds, 
+    public ResponseEntity<?> reorderWebsites(@RequestBody List<Long> websiteIds,
                                             Authentication authentication) {
         try {
             User user = userService.findByUsername(authentication.getName())

@@ -1,6 +1,6 @@
 package cc.moonsea.navigation.controller;
 
-import cc.moonsea.navigation.dto.CategoryDTO;
+import cc.moonsea.navigation.dto.CategoryRequest;
 import cc.moonsea.navigation.entity.Category;
 import cc.moonsea.navigation.entity.User;
 import cc.moonsea.navigation.service.CategoryService;
@@ -16,12 +16,12 @@ import java.util.List;
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
-    
+
     private final CategoryService categoryService;
     private final UserService userService;
-    
+
     @PostMapping
-    public ResponseEntity<?> createCategory(@RequestBody CategoryDTO dto, Authentication authentication) {
+    public ResponseEntity<?> createCategory(@RequestBody CategoryRequest dto, Authentication authentication) {
         try {
             User user = userService.findByUsername(authentication.getName())
                     .orElseThrow(() -> new RuntimeException("用户不存在"));
@@ -31,10 +31,10 @@ public class CategoryController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long id, 
-                                           @RequestBody CategoryDTO dto, 
+    public ResponseEntity<?> updateCategory(@PathVariable Long id,
+                                           @RequestBody CategoryRequest dto,
                                            Authentication authentication) {
         try {
             User user = userService.findByUsername(authentication.getName())
@@ -45,7 +45,7 @@ public class CategoryController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id, Authentication authentication) {
         try {
@@ -57,9 +57,9 @@ public class CategoryController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    
+
     @PostMapping("/reorder")
-    public ResponseEntity<?> reorderCategories(@RequestBody List<Long> categoryIds, 
+    public ResponseEntity<?> reorderCategories(@RequestBody List<Long> categoryIds,
                                                Authentication authentication) {
         try {
             User user = userService.findByUsername(authentication.getName())
