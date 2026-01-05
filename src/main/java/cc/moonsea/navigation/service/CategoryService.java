@@ -33,6 +33,40 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("默认用户不存在"));
     }
 
+    public String processIconValue(String iconInput) {
+        if (iconInput == null || iconInput.trim().isEmpty()) {
+            // 如果没有提供图标，使用默认图标
+            return "/images/icons/tag.svg";
+        }
+
+        String trimmedIcon = iconInput.trim();
+
+        // 检查是否为SVG文本内容
+        if (trimmedIcon.startsWith("<svg") && trimmedIcon.contains("</svg>")) {
+            // 这是SVG文本内容，直接返回
+            return trimmedIcon;
+        } else {
+            // 这是图标路径，检查是否以/images/icons/开头
+            if (trimmedIcon.startsWith("/images/icons/")) {
+                return trimmedIcon;
+            } else {
+                // 如果不是标准路径，添加/images/icons/前缀
+                return trimmedIcon.startsWith("/") ? trimmedIcon : "/images/icons/" + trimmedIcon;
+            }
+        }
+    }
+
+    public Category getCategoryById(Long id, User user) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("分类不存在"));
+
+        if (category.getUser() == null || !category.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("无权限访问该分类");
+        }
+
+        return category;
+    }
+
     public List<Category> getUserCategories(User user) {
         return categoryRepository.findByUserWithWebsites(user);
     }
@@ -41,8 +75,9 @@ public class CategoryService {
     public Category createCategory(CategoryRequest dto, User user) {
         Category category = new Category();
         category.setName(dto.getName());
-        // 如果没有提供图标路径，则使用默认SVG图标
-        category.setIcon(dto.getIcon() != null && !dto.getIcon().trim().isEmpty() ? dto.getIcon() : "/images/icons/tag.svg");
+        // 处理图标：如果是SVG文本内容则直接存储，否则存储图标路径
+        String iconValue = processIconValue(dto.getIcon());
+        category.setIcon(iconValue);
         category.setSortOrder(dto.getSortOrder() != null ? dto.getSortOrder() : 0);
 
         category.setUser(user);
@@ -60,8 +95,9 @@ public class CategoryService {
         }
 
         category.setName(dto.getName());
-        // 如果没有提供图标路径，则使用默认SVG图标
-        category.setIcon(dto.getIcon() != null && !dto.getIcon().trim().isEmpty() ? dto.getIcon() : "/images/icons/tag.svg");
+        // 处理图标：如果是SVG文本内容则直接存储，否则存储图标路径
+        String iconValue = processIconValue(dto.getIcon());
+        category.setIcon(iconValue);
         category.setSortOrder(dto.getSortOrder());
 
         return categoryRepository.save(category);

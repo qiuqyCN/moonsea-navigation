@@ -20,6 +20,18 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final UserService userService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getCategory(@PathVariable Long id, Authentication authentication) {
+        try {
+            User user = userService.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("用户不存在"));
+            Category category = categoryService.getCategoryById(id, user);
+            return ResponseEntity.ok(category);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> createCategory(@RequestBody CategoryRequest dto, Authentication authentication) {
         try {

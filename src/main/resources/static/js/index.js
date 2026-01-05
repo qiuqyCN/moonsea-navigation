@@ -195,25 +195,23 @@ function initCategoryManagement() {
             e.preventDefault();
             e.stopPropagation();
             const btn = e.target.closest('.edit-category');
-            currentEditingCategoryId = btn.getAttribute('data-id');
+            const categoryId = btn.getAttribute('data-id');
+            currentEditingCategoryId = categoryId;
 
-            const categoryItem = btn.closest('li');
-            const name = categoryItem.querySelector('.category-name').textContent;
-            // 获取图标的src属性或class属性
-            let iconValue = '';
-            const iconImg = categoryItem.querySelector('.category-icon');
-            if (iconImg && iconImg.tagName === 'IMG') {
-                iconValue = iconImg.getAttribute('src');
-            } else if (iconImg && iconImg.tagName === 'SVG') {
-                // 如果是SVG图标，可以设置默认值或留空
-                iconValue = '';
-            }
+            // 通过API获取分类的完整信息
+            fetch(`/api/categories/${categoryId}`)
+                .then(response => response.json())
+                .then(categoryData => {
+                    document.getElementById('categoryModalTitle').textContent = '编辑分类';
+                    document.getElementById('categoryName').value = categoryData.name;
+                    document.getElementById('categoryIcon').value = categoryData.icon || '';
 
-            document.getElementById('categoryModalTitle').textContent = '编辑分类';
-            document.getElementById('categoryName').value = name;
-            document.getElementById('categoryIcon').value = iconValue;
-
-            categoryModal.showModal();
+                    categoryModal.showModal();
+                })
+                .catch(error => {
+                    console.error('获取分类信息失败:', error);
+                    alert('获取分类信息失败');
+                });
         }
     });
 
@@ -251,7 +249,7 @@ function initCategoryManagement() {
 // 保存分类
 function saveCategory() {
     const name = document.getElementById('categoryName').value.trim();
-    const icon = document.getElementById('categoryIcon').value.trim(); // 现在是图标路径
+    const icon = document.getElementById('categoryIcon').value.trim(); // 现在支持图标路径或SVG文本内容
 
     if (!name) {
         alert('请输入分类名称');

@@ -28,16 +28,17 @@ public class Category {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(length = 50)
+    @Lob
+    @Column(length = 10000)
     private String icon;
 
     @Column(name = "sort_order")
     private Integer sortOrder = 0;
 
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)

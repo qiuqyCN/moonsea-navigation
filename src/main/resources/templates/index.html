@@ -47,10 +47,14 @@
                     <ul class="menu menu-sm p-0 gap-3 w-full" id="categoryList">
                         <li th:each="category : ${categories}" th:attr="data-category-id=${category.id}">
                             <a th:data-tip="${category.name}" th:href="'#category-' + ${category.id}" class="tooltip flex category-link gap-3">
-                                <svg th:if="${category.icon != null and !category.icon.isBlank()}"
-                                     class="h-4 w-4 category-icon">
-                                    <use th:href="${category.icon}"></use>
-                                </svg>
+                                <th:block th:if="${category.icon != null and !category.icon.isBlank()}">
+                                    <th:block th:if="${#strings.startsWith(category.icon, '<svg') and #strings.endsWith(category.icon, '</svg>')}" th:utext="${category.icon}"></th:block>
+                                    <th:block th:unless="${#strings.startsWith(category.icon, '<svg') and #strings.endsWith(category.icon, '</svg>')}" th:with="iconPath=${category.icon}">
+                                        <svg class="h-4 w-4 category-icon">
+                                            <use th:href="${iconPath}"></use>
+                                        </svg>
+                                    </th:block>
+                                </th:block>
                                 <span class="category-name text-lg" th:text="${category.name}">分类名称</span>
                                 <div class="category-actions flex gap-0.25 ml-auto" sec:authorize="isAuthenticated()" style="display: none;">
                                     <button class="btn btn-ghost btn-xs edit-category" th:attr="data-id=${category.id}"
@@ -90,10 +94,14 @@
                 <div th:each="category : ${categories}" th:id="'category-' + ${category.id}" class="mb-12 scroll-mt-24">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-2xl font-bold flex items-center gap-3">
-                            <svg th:if="${category.icon != null and !category.icon.isBlank()}"
-                                 class="h-6 w-6">
-                                <use th:href="${category.icon}"></use>
-                            </svg>
+                            <th:block th:if="${category.icon != null and !category.icon.isBlank()}">
+                                <th:block th:if="${#strings.startsWith(category.icon, '<svg') and #strings.endsWith(category.icon, '</svg>')}" th:utext="${category.icon}"></th:block>
+                                <th:block th:unless="${#strings.startsWith(category.icon, '<svg') and #strings.endsWith(category.icon, '</svg>')}" th:with="iconPath=${category.icon}">
+                                    <svg class="h-6 w-6">
+                                        <use th:href="${iconPath}"></use>
+                                    </svg>
+                                </th:block>
+                            </th:block>
                             <span th:text="${category.name}">分类名称</span>
                         </h2>
                         <button class="btn btn-primary btn-sm add-website-btn"
@@ -176,18 +184,15 @@
                         <label class="label">
                             <span class="label-text">分类名称</span>
                         </label>
-                        <input type="text" id="categoryName" placeholder="输入分类名称" class="input input-bordered"
+                        <input type="text" id="categoryName" placeholder="输入分类名称" class="input input-bordered w-full"
                                required/>
                     </div>
                     <div class="form-control">
                         <label class="label">
-                            <span class="label-text">图标路径</span>
+                            <span class="label-text">图标路径或SVG文本</span>
                         </label>
-                        <input type="text" id="categoryIcon" placeholder="/images/icons/chat-bubble-left-right.svg"
-                               class="input input-bordered"/>
-                        <label class="label">
-                            <span class="label-text-alt">可选，留空使用默认图标，例如: /images/icons/tag.svg</span>
-                        </label>
+                        <textarea id="categoryIcon" placeholder="可选，留空使用默认图标。支持图标路径(如/images/icons/tag.svg)或SVG文本内容"
+                               class="textarea textarea-bordered w-full" rows="4"></textarea>
                     </div>
                 </form>
                 <div class="modal-action">

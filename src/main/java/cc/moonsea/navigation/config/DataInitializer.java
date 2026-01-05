@@ -6,6 +6,7 @@ import cc.moonsea.navigation.entity.Website;
 import cc.moonsea.navigation.repository.CategoryRepository;
 import cc.moonsea.navigation.repository.UserRepository;
 import cc.moonsea.navigation.repository.WebsiteRepository;
+import cc.moonsea.navigation.service.CategoryService;
 import cc.moonsea.navigation.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class DataInitializer implements CommandLineRunner {
     private final WebsiteRepository websiteRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final CategoryService categoryService;
     private final PasswordEncoder passwordEncoder;
     private final AppConfig appConfig;
 
@@ -169,8 +171,9 @@ public class DataInitializer implements CommandLineRunner {
 
         Category category = new Category();
         category.setName(name);
-        // 如果没有提供图标路径，则使用默认SVG图标
-        category.setIcon(icon != null && !icon.trim().isEmpty() ? icon : "/images/icons/tag.svg");
+        // 处理图标：如果是SVG文本内容则直接存储，否则存储图标路径
+        String iconValue = categoryService.processIconValue(icon);
+        category.setIcon(iconValue);
         category.setSortOrder(sortOrder);
         category.setUser(defaultUser);
         return categoryRepository.save(category);
