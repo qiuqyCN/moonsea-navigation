@@ -5,6 +5,7 @@ import cc.moonsea.navigation.entity.Category;
 import cc.moonsea.navigation.entity.User;
 import cc.moonsea.navigation.service.CategoryService;
 import cc.moonsea.navigation.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -33,7 +34,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCategory(@RequestBody CategoryRequest dto, Authentication authentication) {
+    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryRequest dto, Authentication authentication) {
         try {
             User user = userService.findByUsername(authentication.getName())
                     .orElseThrow(() -> new RuntimeException("用户不存在"));
@@ -46,7 +47,7 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Long id,
-                                           @RequestBody CategoryRequest dto,
+                                           @Valid @RequestBody CategoryRequest dto,
                                            Authentication authentication) {
         try {
             User user = userService.findByUsername(authentication.getName())

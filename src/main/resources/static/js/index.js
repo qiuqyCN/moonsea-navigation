@@ -253,6 +253,8 @@ function saveCategory() {
 
     if (!name) {
         alert('请输入分类名称');
+        // 将焦点设置到分类名称输入框
+        document.getElementById('categoryName').focus();
         return;
     }
 
@@ -352,7 +354,25 @@ function initWebsiteManagement() {
 
             // 获取网址信息
             fetch(`/api/websites/${currentEditingWebsiteId}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(errorText => {
+                            // 尝试解析错误信息
+                            try {
+                                const errorObj = JSON.parse(errorText);
+                                if (errorObj.message) {
+                                    alert('获取网址信息失败：' + errorObj.message);
+                                } else {
+                                    alert('获取网址信息失败：' + errorText);
+                                }
+                            } catch (e) {
+                                alert('获取网址信息失败：' + errorText);
+                            }
+                            throw new Error('获取网址信息失败');
+                        });
+                    }
+                    return response.json();
+                })
                 .then(website => {
                     document.getElementById('websiteModalTitle').textContent = '编辑网址';
                     document.getElementById('websiteName').value = website.name;
@@ -365,7 +385,7 @@ function initWebsiteManagement() {
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('获取网址信息失败');
+                    // 错误处理已经在上面完成，这里不再重复提示
                 });
         }
     });
@@ -409,8 +429,24 @@ function saveWebsite() {
     const logo = document.getElementById('websiteLogo').value.trim();
     const categoryId = document.getElementById('websiteCategoryId').value;
 
-    if (!name || !url) {
-        alert('请填写网站名称和URL');
+    if (!name) {
+        alert('请输入网站名称');
+        document.getElementById('websiteName').focus();
+        return;
+    }
+    
+    if (!url) {
+        alert('请输入网站地址');
+        document.getElementById('websiteUrl').focus();
+        return;
+    }
+
+    // 验证URL格式
+    try {
+        new URL(url);
+    } catch (e) {
+        alert('请输入有效的网站地址格式（如：https://example.com）');
+        document.getElementById('websiteUrl').focus();
         return;
     }
 

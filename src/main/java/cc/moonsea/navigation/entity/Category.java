@@ -2,9 +2,7 @@ package cc.moonsea.navigation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,10 +11,10 @@ import java.util.List;
 @Entity
 @Table(name = "categories", indexes = {
     @Index(name = "idx_category_user_id", columnList = "user_id"),
-    @Index(name = "idx_category_sort_order", columnList = "sort_order"),
     @Index(name = "idx_category_user_sort", columnList = "user_id, sort_order")
 })
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Category {
@@ -43,6 +41,7 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
+    @OrderBy("sortOrder ASC")  // 按照网站的排序字段升序排列，由于有idx_website_category_sort复合索引（category_id, sort_order），数据库可能默认按照这个顺序返回数据
     private List<Website> websites = new ArrayList<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)

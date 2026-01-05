@@ -5,6 +5,7 @@ import cc.moonsea.navigation.entity.User;
 import cc.moonsea.navigation.entity.Website;
 import cc.moonsea.navigation.service.UserService;
 import cc.moonsea.navigation.service.WebsiteService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,8 +21,20 @@ public class WebsiteController {
     private final WebsiteService websiteService;
     private final UserService userService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getWebsite(@PathVariable Long id, Authentication authentication) {
+        try {
+            User user = userService.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("用户不存在"));
+            // 调用服务层方法获取网站信息
+            return ResponseEntity.ok(websiteService.getWebsiteById(id, user.getId()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PostMapping
-    public ResponseEntity<?> createWebsite(@RequestBody WebsiteRequest dto, Authentication authentication) {
+    public ResponseEntity<?> createWebsite(@Valid @RequestBody WebsiteRequest dto, Authentication authentication) {
         try {
             User user = userService.findByUsername(authentication.getName())
                     .orElseThrow(() -> new RuntimeException("用户不存在"));
@@ -34,7 +47,7 @@ public class WebsiteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateWebsite(@PathVariable Long id,
-                                          @RequestBody WebsiteRequest dto,
+                                          @Valid @RequestBody WebsiteRequest dto,
                                           Authentication authentication) {
         try {
             User user = userService.findByUsername(authentication.getName())

@@ -100,4 +100,17 @@ public class WebsiteService {
             websiteRepository.save(website);
         }
     }
+
+    @Transactional
+    public Website getWebsiteById(Long id, Long userId) {
+        Website website = websiteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("网址不存在"));
+
+        if (website.getCategory().getUser() == null ||
+            !website.getCategory().getUser().getId().equals(userId)) {
+            throw new RuntimeException("无权限访问该网址");
+        }
+
+        return website;
+    }
 }
