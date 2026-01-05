@@ -1,6 +1,5 @@
 package cc.moonsea.navigation.config;
 
-import cc.moonsea.navigation.config.AppConfig;
 import cc.moonsea.navigation.entity.Category;
 import cc.moonsea.navigation.entity.User;
 import cc.moonsea.navigation.entity.Website;
@@ -13,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
