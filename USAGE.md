@@ -1,7 +1,7 @@
 # 月海导航项目使用说明
 
 ## 项目简介
-月海导航是一个基于 Spring Boot 4.0.1 + Thymeleaf + Bootstrap 5 + PostgreSQL + JPA 的现代化网址导航系统。
+月海导航是一个基于 Spring Boot 4 + Thymeleaf + Bootstrap 5 + PostgreSQL + JPA 的现代化网址导航系统。
 
 ## 功能特性
 
@@ -13,7 +13,7 @@
 ### 2. 分类管理
 - ✅ 创建、编辑、删除分类
 - ✅ 拖拽排序分类
-- ✅ 自定义分类图标（Bootstrap Icons）
+- ✅ 自定义分类图标
 - ✅ 侧边栏折叠功能
 
 ### 3. 网址管理
