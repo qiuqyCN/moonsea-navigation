@@ -120,6 +120,40 @@
                 </div>
             </div>
         </div>
+        
+        <!-- SEO设置 -->
+        <div class="card bg-base-100 shadow mt-8">
+            <div class="card-body">
+                <h2 class="card-title text-xl mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                    SEO设置
+                </h2>
+                
+                <form id="seoSettingForm" class="space-y-6">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">网站描述 (Description)</span>
+                        </label>
+                        <textarea id="siteDescription" name="siteDescription" placeholder="输入网站描述，用于SEO优化" class="textarea textarea-bordered w-full" rows="3" th:text="${setting?.description}"></textarea>
+                        <label class="label">
+                            <span class="label-text-alt">用于搜索引擎优化，建议不超过160个字符</span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">关键词 (Keywords)</span>
+                        </label>
+                        <input type="text" id="siteKeywords" name="siteKeywords" placeholder="关键词1,关键词2,关键词3" class="input input-bordered w-full" th:value="${setting?.keywords}" />
+                        <label class="label">
+                            <span class="label-text-alt">多个关键词用逗号分隔</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <!-- 友链管理 -->
         <div class="card bg-base-100 shadow mt-8">
@@ -216,7 +250,7 @@
                 document.getElementById('siteDomain').value = data.siteDomain || '';
                 document.getElementById('email').value = data.email || '';
                 document.getElementById('wechat').value = data.wechat || '';
-
+                        
                 // 设置图片预览
                 if (data.siteLogo) {
                     document.getElementById('logoPreview').src = data.siteLogo;
@@ -226,9 +260,13 @@
                     document.getElementById('avatarPreview').src = data.siteAvatar;
                     document.getElementById('siteAvatar').value = data.siteAvatar;
                 }
-
+                        
                 document.getElementById('aboutContent').value = data.aboutContent || '';
-
+                        
+                // 加载SEO设置
+                document.getElementById('siteDescription').value = data.description || '';
+                document.getElementById('siteKeywords').value = data.keywords || '';
+                        
                 // 更新预览
                 updateAboutPreview();
             })
@@ -236,7 +274,7 @@
                 console.error('Error loading settings:', error);
             });
         }
-
+                
         // 保存网站设置
         function saveSettings() {
             const settings = {
@@ -246,9 +284,11 @@
                 siteDomain: document.getElementById('siteDomain').value,
                 email: document.getElementById('email').value,
                 wechat: document.getElementById('wechat').value,
-                aboutContent: document.getElementById('aboutContent').value
+                aboutContent: document.getElementById('aboutContent').value,
+                description: document.getElementById('siteDescription').value,
+                keywords: document.getElementById('siteKeywords').value
             };
-
+                    
             fetch('/admin/api/setting', {
                 method: 'POST',
                 headers: {

@@ -34,6 +34,12 @@ public class WebsiteSetting {
     @Column(name = "about_content")
     private String aboutContent;
 
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "keywords")
+    private String keywords;
+
     @Column(name = "user_id", nullable = false)
     private Long userId;
 

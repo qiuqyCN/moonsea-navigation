@@ -7,7 +7,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">月海导航</title>
+    <link rel="icon" th:href="${setting?.siteAvatar ?:'/favicon.ico'}" type="image/x-icon">
+    <meta name="author" content="Qiuyun(https://moonsea.cc)">
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE" th:text="${setting?.siteName ?: '月海导航'}">月海导航</title>
 
     <!-- Tailwind CSS + daisyUI -->
     <link th:href="@{/css/daisyui5.css}" rel="stylesheet" type="text/css" />
@@ -23,6 +25,12 @@
 <footer th:replace="~{fragments/footer :: footer}"></footer>
 
 <!-- 定义 JavaScript 片段占位符，供子页面插入特定 JS -->
+<script>
+    const htmlElement = document.documentElement;
+    // 检查本地存储中的主题设置
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    htmlElement.setAttribute('data-theme', savedTheme);
+</script>
 <th:block layout:fragment="javascript"></th:block>
 </body>
 </html>

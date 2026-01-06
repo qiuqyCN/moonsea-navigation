@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <!-- 定义可重用的片段 -->
-<nav th:fragment="nav">
+<nav th:fragment="nav" th:with="siteSetting=${setting}">
     <!-- 顶部导航栏 -->
     <div class="w-full bg-base-100 shadow-sm fixed top-0 z-50 flex justify-center">
         <div class="navbar w-full lg:max-w-[60rem] xl:max-w-[76rem] 2xl:max-w-[92rem]">
@@ -24,8 +24,8 @@
                 </div>
                 <!-- 网站 LOGO && 名称-->
                 <a href="/" class="btn btn-ghost text-xl gap-2">
-                    <img src="/images/logo.svg" class="h-8 w-8" alt="月海导航" />
-                    月海导航
+                    <img th:src="${siteSetting?.siteLogo ?: '/images/logo.svg'}" class="h-8 w-8" th:alt="${siteSetting?.siteName ?: '月海导航'}" />
+                    <span th:text="${siteSetting?.siteName ?: '月海导航'}">月海导航</span>
                 </a>
                 <ul class="menu menu-horizontal px-2 gap-2 text-md font-medium hidden md:flex">
                     <li><a href="/" th:classappend="${activeTab == 'home' ? 'text-primary font-bold' : ''}">首页</a></li>

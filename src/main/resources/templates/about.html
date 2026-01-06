@@ -22,7 +22,7 @@
                     <div th:if="${setting?.aboutContent != null and !setting.aboutContent.isEmpty()}">
                         <div class="content" id="aboutContent" th:text="${setting.aboutContent}"></div>
                     </div>
-                    
+
                     <!-- 如果没有自定义内容，则显示默认内容 -->
                     <div th:unless="${setting?.aboutContent != null and !setting.aboutContent.isEmpty()}">
                         <div class="alert alert-info mb-6">
@@ -155,35 +155,35 @@
     </div>
 </th:block>
 
-<th:block layout:fragment="js">
+<th:block layout:fragment="javaScript">
     <script>
         // 页面加载完成后解析Markdown内容
         document.addEventListener('DOMContentLoaded', function() {
             const aboutContentElement = document.getElementById('aboutContent');
             if (aboutContentElement) {
                 const content = aboutContentElement.textContent;
-                
+
                 // 简单的Markdown渲染实现
                 let html = content;
-                
+
                 // 处理标题
                 html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
                 html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
                 html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-                
+
                 // 处理粗体和斜体
                 html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
                 html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-                
+
                 // 处理链接
                 html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-                
+
                 // 处理图片
                 html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" class="max-w-full h-auto" />');
-                
+
                 // 处理换行
                 html = html.replace(/\n/g, '<br>');
-                
+
                 aboutContentElement.innerHTML = html;
                 aboutContentElement.classList.add('prose', 'max-w-none');
             }

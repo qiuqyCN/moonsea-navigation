@@ -3,7 +3,9 @@ package cc.moonsea.navigation.controller;
 import cc.moonsea.navigation.dto.ChangePasswordRequest;
 import cc.moonsea.navigation.dto.RegisterRequest;
 import cc.moonsea.navigation.entity.User;
+import cc.moonsea.navigation.entity.WebsiteSetting;
 import cc.moonsea.navigation.service.UserService;
+import cc.moonsea.navigation.service.WebsiteSettingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -14,19 +16,30 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
 
     private final UserService userService;
+    private final WebsiteSettingService websiteSettingService;
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(Model model) {
+        User user = userService.getDefaultUser();
+        // 获取网站设置信息
+        Optional<WebsiteSetting> settingOpt = websiteSettingService.getWebsiteSettingByUserId(user.getId());
+        settingOpt.ifPresent(websiteSetting -> model.addAttribute("setting", websiteSetting));
         return "login";
     }
 
     @GetMapping("/register")
     public String registerPage(Model model) {
+        User user = userService.getDefaultUser();
+        // 获取网站设置信息
+        Optional<WebsiteSetting> settingOpt = websiteSettingService.getWebsiteSettingByUserId(user.getId());
+        settingOpt.ifPresent(websiteSetting -> model.addAttribute("setting", websiteSetting));
         model.addAttribute("registerRequest", new RegisterRequest());
         return "register";
     }

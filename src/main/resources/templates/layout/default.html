@@ -7,7 +7,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">月海导航</title>
+    <link rel="icon" th:href="${setting?.siteAvatar ?:'/favicon.ico'}" type="image/x-icon">
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE" th:text="${setting?.siteName ?: '月海导航'}">月海导航</title>
+    <meta name="description" th:content="${setting?.description ?: '月海导航 - 一个简洁高效的网址导航网站，帮助您快速访问常用网站'}" />
+    <meta name="keywords" th:content="${setting?.keywords ?: '导航,网址导航,网站导航,书签,收藏夹,月海导航'}" />
+    <meta name="author" content="Qiuyun(https://moonsea.cc)">
+
+    <meta property="og:title" th:content="${setting?.siteName ?: '月海导航'}" />
+    <meta property="og:description" th:content="${setting?.description ?: '月海导航 - 一个简洁高效的网址导航网站，帮助您快速访问常用网站'}" />
+    <meta property="og:image" th:content="${setting?.siteLogo ?: '/images/logo.svg'}">
 
     <!-- Tailwind CSS + daisyUI -->
     <link th:href="@{/css/daisyui5.css}" rel="stylesheet" type="text/css" />
