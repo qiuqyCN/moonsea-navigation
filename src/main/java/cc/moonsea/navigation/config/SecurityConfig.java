@@ -32,7 +32,12 @@ public class SecurityConfig {
                         "/images/**",
                         "/api/search"
                 ).permitAll()
-                .requestMatchers("/api/auth/change-password", "/api/categories/**", "/api/websites/**").authenticated()
+                .requestMatchers(
+                        "/api/auth/change-password",
+                        "/api/categories/**",
+                        "/api/websites/**",
+                        "/admin/api/**")
+                    .authenticated()
                 .anyRequest().permitAll()
             )
             .formLogin(form -> form
@@ -48,7 +53,7 @@ public class SecurityConfig {
                 .permitAll()
             )
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/api/**")
+                .ignoringRequestMatchers("/api/**","/admin/api/**")
             );
 
         return http.build();

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <title>网站设置</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <h1 class="text-3xl font-bold mb-8">网站设置</h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- 基本信息设置 -->
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-xl mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        基本信息
+                    </h2>
+
+                    <form id="basicSettingForm" class="space-y-6">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">网站名称</span>
+                            </label>
+                            <input type="text" id="siteName" name="siteName" placeholder="输入网站名称" class="input input-bordered w-full" th:value="${setting?.siteName}" />
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">网站域名</span>
+                            </label>
+                            <input type="text" id="siteDomain" name="siteDomain" placeholder="https://example.com" class="input input-bordered w-full" th:value="${setting?.siteDomain}" />
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">邮箱</span>
+                            </label>
+                            <input type="email" id="email" name="email" placeholder="example@example.com" class="input input-bordered w-full" th:value="${setting?.email}" />
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">微信</span>
+                            </label>
+                            <input type="text" id="wechat" name="wechat" placeholder="微信号" class="input input-bordered w-full" th:value="${setting?.wechat}" />
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">网站LOGO</span>
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <div class="avatar">
+                                    <div class="w-16 h-16 rounded">
+                                        <img id="logoPreview" th:src="${setting?.siteLogo ?: '/images/logo.svg'}" alt="Logo Preview" class="object-cover" />
+                                    </div>
+                                </div>
+                                <input type="hidden" id="siteLogo" name="siteLogo" th:value="${setting?.siteLogo}" />
+                                <input type="file" id="logoUpload" class="file-input file-input-bordered w-full max-w-xs" accept="image/*" />
+                                <button type="button" class="btn btn-sm" onclick="uploadLogo()">上传</button>
+                            </div>
+                            <label class="label">
+                                <span class="label-text-alt">支持JPG、PNG、SVG格式，建议尺寸200x200像素</span>
+                            </label>
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">网站头像</span>
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <div class="avatar">
+                                    <div class="w-16 h-16 rounded-full">
+                                        <img id="avatarPreview" th:src="${setting?.siteAvatar ?: '/images/logo.svg'}" alt="Avatar Preview" class="object-cover" />
+                                    </div>
+                                </div>
+                                <input type="hidden" id="siteAvatar" name="siteAvatar" th:value="${setting?.siteAvatar}" />
+                                <input type="file" id="avatarUpload" class="file-input file-input-bordered w-full max-w-xs" accept="image/*" />
+                                <button type="button" class="btn btn-sm" onclick="uploadAvatar()">上传</button>
+                            </div>
+                            <label class="label">
+                                <span class="label-text-alt">支持JPG、PNG、SVG格式，建议尺寸200x200像素</span>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 关于页面设置 -->
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-xl mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        关于页面内容
+                    </h2>
+
+                    <form id="aboutSettingForm" class="space-y-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">关于页面内容 (Markdown格式)</span>
+                            </label>
+                            <textarea id="aboutContent" name="aboutContent" placeholder="输入关于页面的Markdown内容..." class="textarea textarea-bordered w-full h-64" th:text="${setting?.aboutContent}"></textarea>
+                        </div>
+
+                        <div class="card bg-base-200">
+                            <div class="card-body">
+                                <h3 class="font-bold mb-2">预览</h3>
+                                <div id="aboutPreview" class="prose max-w-none"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 友链管理 -->
+        <div class="card bg-base-100 shadow mt-8">
+            <div class="card-body">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="card-title text-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        友链管理
+                    </h2>
+                    <button type="button" class="btn btn-primary" onclick="showAddFriendLinkModal()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        添加友链
+                    </button>
+                </div>
+
+                <div id="friendLinksContainer" class="space-y-4">
+                    <!-- 友链列表将通过JavaScript动态加载 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 保存按钮 -->
+        <div class="mt-8 flex justify-end gap-4">
+            <button type="button" class="btn btn-outline" onclick="loadSettings()">重置</button>
+            <button type="button" class="btn btn-primary" onclick="saveSettings()">保存设置</button>
+        </div>
+    </div>
+
+    <!-- 添加/编辑友链模态框 -->
+    <dialog id="friendLinkModal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg mb-4" id="friendLinkModalTitle">添加友链</h3>
+            <form id="friendLinkForm" class="space-y-4">
+                <input type="hidden" id="friendLinkId">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">网站名称</span>
+                    </label>
+                    <input type="text" id="friendLinkName" placeholder="输入网站名称" class="input input-bordered w-full" required />
+                </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">网站URL</span>
+                    </label>
+                    <input type="url" id="friendLinkUrl" placeholder="https://example.com" class="input input-bordered w-full" required />
+                </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">网站描述</span>
+                    </label>
+                    <textarea id="friendLinkDescription" placeholder="输入网站描述" class="textarea textarea-bordered w-full" rows="2"></textarea>
+                </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Logo URL</span>
+                    </label>
+                    <input type="url" id="friendLinkLogo" placeholder="https://example.com/logo.png" class="input input-bordered w-full" />
+                </div>
+            </form>
+            <div class="modal-action">
+                <button type="button" class="btn btn-ghost" onclick="friendLinkModal.close()">取消</button>
+                <button type="button" class="btn btn-primary" onclick="saveFriendLink()">保存</button>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script>
+        // 页面加载时获取设置
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSettings();
+            loadFriendLinks();
+        });
+
+        // 加载网站设置
+        function loadSettings() {
+            fetch('/admin/api/setting', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('siteName').value = data.siteName || '';
+                document.getElementById('siteDomain').value = data.siteDomain || '';
+                document.getElementById('email').value = data.email || '';
+                document.getElementById('wechat').value = data.wechat || '';
+
+                // 设置图片预览
+                if (data.siteLogo) {
+                    document.getElementById('logoPreview').src = data.siteLogo;
+                    document.getElementById('siteLogo').value = data.siteLogo;
+                }
+                if (data.siteAvatar) {
+                    document.getElementById('avatarPreview').src = data.siteAvatar;
+                    document.getElementById('siteAvatar').value = data.siteAvatar;
+                }
+
+                document.getElementById('aboutContent').value = data.aboutContent || '';
+
+                // 更新预览
+                updateAboutPreview();
+            })
+            .catch(error => {
+                console.error('Error loading settings:', error);
+            });
+        }
+
+        // 保存网站设置
+        function saveSettings() {
+            const settings = {
+                siteName: document.getElementById('siteName').value,
+                siteLogo: document.getElementById('siteLogo').value,
+                siteAvatar: document.getElementById('siteAvatar').value,
+                siteDomain: document.getElementById('siteDomain').value,
+                email: document.getElementById('email').value,
+                wechat: document.getElementById('wechat').value,
+                aboutContent: document.getElementById('aboutContent').value
+            };
+
+            fetch('/admin/api/setting', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(settings)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.id) {
+                    alert('设置保存成功！');
+                } else {
+                    alert('保存失败：' + data);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving settings:', error);
+                alert('保存失败：' + error.message);
+            });
+        }
+
+        // 上传LOGO
+        function uploadLogo() {
+            const fileInput = document.getElementById('logoUpload');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('请选择要上传的文件');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', 'logo');
+
+            fetch('/admin/api/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.url) {
+                    const logoPreview = document.getElementById('logoPreview');
+                    logoPreview.src = data.url;
+                    document.getElementById('siteLogo').value = data.url;
+                    alert(data.message);
+                } else {
+                    alert('上传失败：' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error uploading logo:', error);
+                alert('上传失败：' + error.message);
+            });
+        }
+
+        // 上传头像
+        function uploadAvatar() {
+            const fileInput = document.getElementById('avatarUpload');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('请选择要上传的文件');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', 'avatar');
+
+            fetch('/admin/api/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.url) {
+                    const avatarPreview = document.getElementById('avatarPreview');
+                    avatarPreview.src = data.url;
+                    document.getElementById('siteAvatar').value = data.url;
+                    alert(data.message);
+                } else {
+                    alert('上传失败：' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error uploading avatar:', error);
+                alert('上传失败：' + error.message);
+            });
+        }
+
+        // 更新关于页面预览
+        function updateAboutPreview() {
+            const content = document.getElementById('aboutContent').value;
+
+            // 简单的Markdown渲染实现
+            let html = content;
+
+            // 处理标题
+            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+
+            // 处理粗体和斜体
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+            // 处理链接
+            html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+            // 处理图片
+            html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" class="max-w-full h-auto" />');
+
+            // 处理换行
+            html = html.replace(/\n/g, '<br>');
+
+            document.getElementById('aboutPreview').innerHTML = html;
+        }
+
+        // 监听关于内容变化，实时更新预览
+        document.getElementById('aboutContent').addEventListener('input', updateAboutPreview);
+
+        // 友链相关功能
+        let friendLinks = [];
+
+        // 加载友链列表
+        function loadFriendLinks() {
+            fetch('/admin/api/friend-links', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                friendLinks = Array.isArray(data) ? data : [];
+                renderFriendLinks();
+            })
+            .catch(error => {
+                console.error('Error loading friend links:', error);
+                alert('加载友链失败：' + error.message);
+            });
+        }
+
+        // 渲染友链列表
+        function renderFriendLinks() {
+            const container = document.getElementById('friendLinksContainer');
+            container.innerHTML = '';
+
+            friendLinks.forEach(link => {
+                const linkElement = document.createElement('div');
+                linkElement.className = 'card bg-base-200';
+                linkElement.draggable = true;
+                linkElement.dataset.id = link.id;
+                linkElement.innerHTML = `
+                    <div class="card-body flex-row items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="avatar placeholder">
+                                <div class="bg-primary text-neutral-content rounded-full w-10">
+                                    <img src="${link.logo || '/images/logo.svg'}" alt="${link.name}" class="object-cover w-10 h-10 rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <span class="text-lg font-semibold">${link.name.substring(0, 1)}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">${link.name}</h3>
+                                <p class="text-sm text-base-content/60">${link.description || link.url}</p>
+                                <a href="${link.url}" target="_blank" class="text-sm text-primary">${link.url}</a>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="button" class="btn btn-sm btn-outline" onclick="editFriendLink(${link.id})">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-error" onclick="deleteFriendLink(${link.id})">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(linkElement);
+            });
+
+            // 启用拖拽排序
+            enableDragAndDrop();
+        }
+
+        // 显示添加友链模态框
+        function showAddFriendLinkModal() {
+            document.getElementById('friendLinkModalTitle').textContent = '添加友链';
+            document.getElementById('friendLinkForm').reset();
+            document.getElementById('friendLinkId').value = '';
+            friendLinkModal.showModal();
+        }
+
+        // 编辑友链
+        function editFriendLink(id) {
+            const link = friendLinks.find(l => l.id === id);
+            if (link) {
+                document.getElementById('friendLinkModalTitle').textContent = '编辑友链';
+                document.getElementById('friendLinkId').value = link.id;
+                document.getElementById('friendLinkName').value = link.name;
+                document.getElementById('friendLinkUrl').value = link.url;
+                document.getElementById('friendLinkDescription').value = link.description || '';
+                document.getElementById('friendLinkLogo').value = link.logo || '';
+                friendLinkModal.showModal();
+            }
+        }
+
+        // 保存友链
+        function saveFriendLink() {
+            const id = document.getElementById('friendLinkId').value;
+            const name = document.getElementById('friendLinkName').value;
+            const url = document.getElementById('friendLinkUrl').value;
+            const description = document.getElementById('friendLinkDescription').value;
+            const logo = document.getElementById('friendLinkLogo').value;
+
+            if (!name || !url) {
+                alert('网站名称和URL不能为空');
+                return;
+            }
+
+            const friendLinkData = {
+                name: name,
+                url: url,
+                description: description,
+                logo: logo
+            };
+
+            let request;
+            if (id) {
+                // 更新现有友链
+                request = fetch(`/admin/api/friend-links/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(friendLinkData)
+                });
+            } else {
+                // 创建新友链
+                request = fetch('/admin/api/friend-links', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(friendLinkData)
+                });
+            }
+
+            request
+            .then(response => response.json())
+            .then(data => {
+                if (data.id) {
+                    loadFriendLinks(); // 重新加载列表
+                    friendLinkModal.close();
+                    alert(id ? '友链更新成功！' : '友链添加成功！');
+                } else {
+                    alert('操作失败：' + data);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving friend link:', error);
+                alert('保存失败：' + error.message);
+            });
+        }
+
+        // 删除友链
+        function deleteFriendLink(id) {
+            if (confirm('确定要删除此友链吗？')) {
+                fetch(`/admin/api/friend-links/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data === '删除成功') {
+                        loadFriendLinks(); // 重新加载列表
+                        alert('友链删除成功！');
+                    } else {
+                        alert('删除失败：' + data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting friend link:', error);
+                    alert('删除失败：' + error.message);
+                });
+            }
+        }
+
+        // 拖拽排序相关功能
+        function enableDragAndDrop() {
+            const container = document.getElementById('friendLinksContainer');
+            const items = container.querySelectorAll('[draggable="true"]');
+
+            items.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('dragenter', handleDragEnter);
+                item.addEventListener('dragleave', handleDragLeave);
+                item.addEventListener('drop', handleDrop);
+                item.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        let dragSrcEl = null;
+
+        function handleDragStart(e) {
+            dragSrcEl = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+            this.classList.add('opacity-50');
+        }
+
+        function handleDragOver(e) {
+            if (dragSrcEl) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                return false;
+            }
+        }
+
+        function handleDragEnter(e) {
+            this.classList.add('bg-base-300');
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('bg-base-300');
+        }
+
+        function handleDrop(e) {
+            if (dragSrcEl && dragSrcEl !== this) {
+                e.preventDefault();
+
+                // 交换DOM元素
+                const srcId = parseInt(dragSrcEl.dataset.id);
+                const destId = parseInt(this.dataset.id);
+
+                // 交换数组中的位置
+                const srcIndex = friendLinks.findIndex(link => link.id === srcId);
+                const destIndex = friendLinks.findIndex(link => link.id === destId);
+
+                if (srcIndex !== -1 && destIndex !== -1) {
+                    // 交换数组元素
+                    [friendLinks[srcIndex], friendLinks[destIndex]] = [friendLinks[destIndex], friendLinks[srcIndex]];
+
+                    // 重新渲染
+                    renderFriendLinks();
+
+                    // 保存排序
+                    saveFriendLinksOrder();
+                }
+            }
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            const items = document.querySelectorAll('[draggable="true"]');
+            items.forEach(item => {
+                item.classList.remove('opacity-50');
+                item.classList.remove('bg-base-300');
+            });
+        }
+
+        // 保存友链排序
+        function saveFriendLinksOrder() {
+            const ids = friendLinks.map(link => link.id);
+
+            fetch('/admin/api/friend-links/reorder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(ids)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data === '排序成功') {
+                    console.log('友链排序保存成功');
+                } else {
+                    console.error('保存排序失败：', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving friend links order:', error);
+            });
+        }
+    </script>
+</th:block>
+</body>
+</html>

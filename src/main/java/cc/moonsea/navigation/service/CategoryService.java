@@ -18,19 +18,12 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final AppConfig appConfig;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     public List<Category> getDefaultCategories() {
         // 获取默认用户
-        User defaultUser = getDefaultUser();
+        User defaultUser = userService.getDefaultUser();
         return categoryRepository.findByUserWithWebsites(defaultUser);
-    }
-
-    private User getDefaultUser() {
-        // 从配置中获取默认用户的用户名
-        String defaultUsername = appConfig.getDefaultUser().getUsername();
-        return userRepository.findByUsername(defaultUsername)
-                .orElseThrow(() -> new RuntimeException("默认用户不存在"));
     }
 
     public String processIconValue(String iconInput) {

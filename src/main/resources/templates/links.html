@@ -14,20 +14,21 @@
         </div>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- 友链示例 -->
-            <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+            <!-- 动态友链列表 -->
+            <div th:each="friendLink : ${friendLinks}" class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
                 <div class="card-body">
                     <h2 class="card-title">
                         <div class="avatar placeholder">
                             <div class="bg-primary text-primary-content rounded-full w-12">
-                                <span class="text-xl">友</span>
+                                <img th:if="${friendLink.logo != null and !friendLink.logo.isEmpty()}" th:src="${friendLink.logo}" th:alt="${friendLink.name}" class="object-cover w-12 h-12 rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                <span class="text-xl" th:text="${friendLink.name.substring(0, 1)}">友</span>
                             </div>
                         </div>
-                        友站名称
+                        <span th:text="${friendLink.name}">友站名称</span>
                     </h2>
-                    <p class="text-base-content/60">这里是友站的简短描述信息</p>
+                    <p class="text-base-content/60" th:text="${friendLink.description ?: friendLink.url}">这里是友站的简短描述信息</p>
                     <div class="card-actions justify-end mt-4">
-                        <a href="#" target="_blank" class="btn btn-primary btn-sm">
+                        <a th:href="${friendLink.url}" target="_blank" class="btn btn-primary btn-sm">
                             访问网站
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -36,48 +37,15 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-                <div class="card-body">
-                    <h2 class="card-title">
-                        <div class="avatar placeholder">
-                            <div class="bg-secondary text-secondary-content rounded-full w-12">
-                                <span class="text-xl">链</span>
-                            </div>
-                        </div>
-                        友站名称
-                    </h2>
-                    <p class="text-base-content/60">这里是友站的简短描述信息</p>
-                    <div class="card-actions justify-end mt-4">
-                        <a href="#" target="_blank" class="btn btn-primary btn-sm">
-                            访问网站
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-                <div class="card-body">
-                    <h2 class="card-title">
-                        <div class="avatar placeholder">
-                            <div class="bg-accent text-accent-content rounded-full w-12">
-                                <span class="text-xl">站</span>
-                            </div>
-                        </div>
-                        友站名称
-                    </h2>
-                    <p class="text-base-content/60">这里是友站的简短描述信息</p>
-                    <div class="card-actions justify-end mt-4">
-                        <a href="#" target="_blank" class="btn btn-primary btn-sm">
-                            访问网站
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                        </a>
-                    </div>
+            
+            <!-- 如果没有友链，显示提示信息 -->
+            <div th:if="${#lists.isEmpty(friendLinks)}" class="col-span-full text-center py-12">
+                <div class="text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-base-content/30 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2">暂无友链</h3>
+                    <p class="text-base-content/60">当前还没有配置友链</p>
                 </div>
             </div>
         </div>

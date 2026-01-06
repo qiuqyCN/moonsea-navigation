@@ -96,4 +96,20 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(defaultUsername)
                 .orElseThrow(() -> new RuntimeException("默认用户不存在"));
     }
+
+    public User getDefaultUser(Authentication authentication) {
+        User user;
+        if (authentication != null && authentication.isAuthenticated() &&
+                !"anonymousUser".equals(authentication.getPrincipal())) {
+            String username = authentication.getName();
+            user = userRepository.findByUsername(username).orElse(null);
+            if (user == null) {
+                user = getDefaultUser();
+            }
+        } else {
+            user = getDefaultUser();
+        }
+
+        return user;
+    }
 }

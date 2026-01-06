@@ -10,7 +10,7 @@ import cc.moonsea.navigation.config.AppConfig;
 @EnableConfigurationProperties(AppConfig.class)
 public class MoonseaNavigationApplication {
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         SpringApplication.run(MoonseaNavigationApplication.class, args);
     }
 
