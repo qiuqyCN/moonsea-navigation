@@ -7,9 +7,6 @@ import cc.moonsea.navigation.service.FriendLinkService;
 import cc.moonsea.navigation.service.UserService;
 import cc.moonsea.navigation.service.WebsiteSettingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -18,15 +15,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
@@ -120,7 +116,7 @@ public class WebsiteSettingController {
             // 生成唯一文件名
             String originalFileName = file.getOriginalFilename();
             String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-            String uniqueFileName = LocalDateTime.now() + fileExtension;
+            String uniqueFileName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")) + fileExtension;
 
             // 保存文件
             Path filePath = uploadPath.resolve(uniqueFileName);
@@ -138,6 +134,53 @@ public class WebsiteSettingController {
         }
 
         return response;
+    }
+
+    @DeleteMapping("/api/file")
+    @ResponseBody
+    public ResponseEntity<?> deleteFile(@RequestParam("url") String url,
+                                       Authentication authentication) {
+        try {
+            // 验证用户
+            User user = userService.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("用户不存在"));
+
+            // 验证URL格式，确保安全
+            if (url == null || !url.startsWith("/uploads/")) {
+                return ResponseEntity.badRequest().body("无效的文件路径");
+            }
+
+            // 获取文件路径
+            Path filePath = Paths.get(uploadDir).toAbsolutePath().normalize()
+                    .resolve(url.substring(9)).normalize(); // 移除"/uploads/"前缀
+
+            // 验证路径是否在uploads目录内（防止路径遍历攻击）
+            Path uploadsPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+            if (!filePath.startsWith(uploadsPath)) {
+                return ResponseEntity.badRequest().body("无效的文件路径");
+            }
+
+            // 删除文件
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+            }
+
+            // 更新网站设置，将对应字段设为null
+            websiteSettingService.getWebsiteSettingByUserId(user.getId())
+                    .ifPresent(setting -> {
+                        if (setting.getSiteLogo() != null && setting.getSiteLogo().equals(url)) {
+                            setting.setSiteLogo(null);
+                        }
+                        if (setting.getSiteAvatar() != null && setting.getSiteAvatar().equals(url)) {
+                            setting.setSiteAvatar(null);
+                        }
+                        websiteSettingService.saveWebsiteSetting(setting);
+                    });
+
+            return ResponseEntity.ok("文件删除成功");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("删除失败：" + e.getMessage());
+        }
     }
 
     // 友链相关API

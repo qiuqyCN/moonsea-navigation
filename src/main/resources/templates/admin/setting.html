@@ -63,7 +63,12 @@
                                 </div>
                                 <input type="hidden" id="siteLogo" name="siteLogo" th:value="${setting?.siteLogo}" />
                                 <input type="file" id="logoUpload" class="file-input file-input-bordered w-full max-w-xs" accept="image/*" />
-                                <button type="button" class="btn btn-sm" onclick="uploadLogo()">上传</button>
+                                <div class="flex gap-2">
+                                    <button type="button" class="btn btn-sm" onclick="uploadLogo()">上传</button>
+                                    <button type="button" class="btn btn-sm btn-error" onclick="deleteLogo()" id="deleteLogoBtn" th:if="${setting?.siteLogo != null && #strings.startsWith(setting.siteLogo, '/uploads/')}" style="display: inline-block;">
+                                        删除
+                                    </button>
+                                </div>
                             </div>
                             <label class="label">
                                 <span class="label-text-alt">支持JPG、PNG、SVG格式，建议尺寸200x200像素</span>
@@ -82,7 +87,12 @@
                                 </div>
                                 <input type="hidden" id="siteAvatar" name="siteAvatar" th:value="${setting?.siteAvatar}" />
                                 <input type="file" id="avatarUpload" class="file-input file-input-bordered w-full max-w-xs" accept="image/*" />
-                                <button type="button" class="btn btn-sm" onclick="uploadAvatar()">上传</button>
+                                <div class="flex gap-2">
+                                    <button type="button" class="btn btn-sm" onclick="uploadAvatar()">上传</button>
+                                    <button type="button" class="btn btn-sm btn-error" onclick="deleteAvatar()" id="deleteAvatarBtn" th:if="${setting?.siteAvatar != null && #strings.startsWith(setting.siteAvatar, '/uploads/')}" style="display: inline-block;">
+                                        删除
+                                    </button>
+                                </div>
                             </div>
                             <label class="label">
                                 <span class="label-text-alt">支持JPG、PNG、SVG格式，建议尺寸200x200像素</span>
@@ -255,10 +265,24 @@
                 if (data.siteLogo) {
                     document.getElementById('logoPreview').src = data.siteLogo;
                     document.getElementById('siteLogo').value = data.siteLogo;
+                    // 显示删除按钮
+                    if (data.siteLogo.startsWith('/uploads/')) {
+                        document.getElementById('deleteLogoBtn').style.display = 'inline-block';
+                    }
+                } else {
+                    // 隐藏删除按钮
+                    document.getElementById('deleteLogoBtn').style.display = 'none';
                 }
                 if (data.siteAvatar) {
                     document.getElementById('avatarPreview').src = data.siteAvatar;
                     document.getElementById('siteAvatar').value = data.siteAvatar;
+                    // 显示删除按钮
+                    if (data.siteAvatar.startsWith('/uploads/')) {
+                        document.getElementById('deleteAvatarBtn').style.display = 'inline-block';
+                    }
+                } else {
+                    // 隐藏删除按钮
+                    document.getElementById('deleteAvatarBtn').style.display = 'none';
                 }
                         
                 document.getElementById('aboutContent').value = data.aboutContent || '';
@@ -273,6 +297,76 @@
             .catch(error => {
                 console.error('Error loading settings:', error);
             });
+        }
+                
+        // 删除LOGO
+        function deleteLogo() {
+            const logoUrl = document.getElementById('siteLogo').value;
+            if (!logoUrl) {
+                alert('没有可删除的LOGO');
+                return;
+            }
+            
+            if (confirm('确定要删除当前LOGO吗？')) {
+                fetch('/admin/api/file?url=' + encodeURIComponent(logoUrl), {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data === '文件删除成功') {
+                        // 重置为默认图片
+                        document.getElementById('logoPreview').src = '/images/logo.svg';
+                        document.getElementById('siteLogo').value = '';
+                        // 隐藏删除按钮
+                        document.getElementById('deleteLogoBtn').style.display = 'none';
+                        alert('LOGO删除成功');
+                    } else {
+                        alert('删除失败：' + data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting logo:', error);
+                    alert('删除失败：' + error.message);
+                });
+            }
+        }
+
+        // 删除头像
+        function deleteAvatar() {
+            const avatarUrl = document.getElementById('siteAvatar').value;
+            if (!avatarUrl) {
+                alert('没有可删除的头像');
+                return;
+            }
+            
+            if (confirm('确定要删除当前头像吗？')) {
+                fetch('/admin/api/file?url=' + encodeURIComponent(avatarUrl), {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data === '文件删除成功') {
+                        // 重置为默认图片
+                        document.getElementById('avatarPreview').src = '/images/logo.svg';
+                        document.getElementById('siteAvatar').value = '';
+                        // 隐藏删除按钮
+                        document.getElementById('deleteAvatarBtn').style.display = 'none';
+                        alert('头像删除成功');
+                    } else {
+                        alert('删除失败：' + data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting avatar:', error);
+                    alert('删除失败：' + error.message);
+                });
+            }
         }
                 
         // 保存网站设置
@@ -299,6 +393,8 @@
             .then(response => response.json())
             .then(data => {
                 if (data.id) {
+                    // 更新删除按钮的显示状态
+                    updateDeleteButtonVisibility();
                     alert('设置保存成功！');
                 } else {
                     alert('保存失败：' + data);
@@ -333,6 +429,8 @@
                     const logoPreview = document.getElementById('logoPreview');
                     logoPreview.src = data.url;
                     document.getElementById('siteLogo').value = data.url;
+                    // 显示删除按钮
+                    document.getElementById('deleteLogoBtn').style.display = 'inline-block';
                     alert(data.message);
                 } else {
                     alert('上传失败：' + data.message);
@@ -367,6 +465,8 @@
                     const avatarPreview = document.getElementById('avatarPreview');
                     avatarPreview.src = data.url;
                     document.getElementById('siteAvatar').value = data.url;
+                    // 显示删除按钮
+                    document.getElementById('deleteAvatarBtn').style.display = 'inline-block';
                     alert(data.message);
                 } else {
                     alert('上传失败：' + data.message);
@@ -406,6 +506,24 @@
             document.getElementById('aboutPreview').innerHTML = html;
         }
 
+        // 更新删除按钮的可见性
+        function updateDeleteButtonVisibility() {
+            const logoUrl = document.getElementById('siteLogo').value;
+            const avatarUrl = document.getElementById('siteAvatar').value;
+            
+            if (logoUrl && logoUrl.startsWith('/uploads/')) {
+                document.getElementById('deleteLogoBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('deleteLogoBtn').style.display = 'none';
+            }
+            
+            if (avatarUrl && avatarUrl.startsWith('/uploads/')) {
+                document.getElementById('deleteAvatarBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('deleteAvatarBtn').style.display = 'none';
+            }
+        }
+        
         // 监听关于内容变化，实时更新预览
         document.getElementById('aboutContent').addEventListener('input', updateAboutPreview);
 
