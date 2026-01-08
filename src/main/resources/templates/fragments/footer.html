@@ -4,19 +4,5 @@
             Copyright © 2025 -  <span th:text="${#dates.year(#dates.createNow())}"></span> - All right reserved by
             <a th:href="@{${siteSetting?.siteDomain ?: 'https://moonsea.cc'}}" class="link link-hover" target="_blank" th:text="${siteSetting?.siteName ?: 'moonsea.cc'}">moonsea.cc</a>
         </p>
-        <div th:if="${siteSetting != null and (siteSetting.email != null or siteSetting.wechat != null)}" class="flex flex-wrap justify-center gap-4 mt-2">
-            <span th:if="${siteSetting?.email}" class="flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                <a th:href="'mailto:' + ${siteSetting?.email}" class="link link-hover" th:text="${siteSetting?.email}">Email</a>
-            </span>
-            <span th:if="${siteSetting?.wechat}" class="flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                </svg>
-                WeChat: <span th:text="${siteSetting?.wechat}">WeChat</span>
-            </span>
-        </div>
     </aside>
 </footer>
