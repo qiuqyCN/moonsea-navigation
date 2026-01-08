@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/default}">
+<head>
+    <title>统计管理</title>
+</head>
+<th:block layout:fragment="content">
+    <div class="p-6">
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold">访问统计</h1>
+            <p class="text-base-content/60">查看网站访问统计数据</p>
+        </div>
+
+        <!-- 统计概览卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="card bg-primary text-primary-content">
+                <div class="card-body">
+                    <h2 class="card-title">今日访问量</h2>
+                    <p class="text-3xl font-bold" th:text="${todayPv}">0</p>
+                    <p class="text-sm opacity-75">页面浏览量</p>
+                </div>
+            </div>
+
+            <div class="card bg-secondary text-secondary-content">
+                <div class="card-body">
+                    <h2 class="card-title">今日访客数</h2>
+                    <p class="text-3xl font-bold" th:text="${todayUv}">0</p>
+                    <p class="text-sm opacity-75">独立访客数</p>
+                </div>
+            </div>
+
+            <div class="card bg-accent text-accent-content">
+                <div class="card-body">
+                    <h2 class="card-title">总访问量</h2>
+                    <p class="text-3xl font-bold" th:text="${totalPv}">0</p>
+                    <p class="text-sm opacity-75">累计页面浏览</p>
+                </div>
+            </div>
+
+            <div class="card bg-info text-info-content">
+                <div class="card-body">
+                    <h2 class="card-title">总访客数</h2>
+                    <p class="text-3xl font-bold" th:text="${totalUv}">0</p>
+                    <p class="text-sm opacity-75">累计独立访客</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 详细统计信息 -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h2 class="card-title mb-4">详细统计</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-3">统计说明</h3>
+                        <ul class="space-y-2">
+                            <li class="flex items-start">
+                                <span class="badge badge-primary mr-2">PV</span>
+                                <span>页面浏览量（Page View）：记录页面被访问的次数</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="badge badge-secondary mr-2">UV</span>
+                                <span>独立访客数（Unique Visitor）：基于IP地址统计独立访问者数量</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="mt-4 p-4 bg-base-200 rounded-lg">
+                            <h4 class="font-semibold mb-2">数据更新说明</h4>
+                            <p class="text-sm text-base-content/70">
+                                统计数据实时更新，今日数据会持续更新直到当天结束。
+                                所有访问记录都会被匿名化处理，不包含个人隐私信息。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-3">功能特性</h3>
+                        <ul class="space-y-2">
+                            <li class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span>实时统计页面访问量（PV）和独立访客数（UV）</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span>按日期统计访问数据</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span>隐私保护，仅记录IP地址和访问路径</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span>自动过滤静态资源请求</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+<th:block layout:fragment="javascript">
+    <script>
+        // 定时刷新统计数据
+        setInterval(function() {
+            // 这里可以实现定时刷新功能，但为了性能考虑，暂不实现自动刷新
+        }, 300000); // 每5分钟刷新一次
+    </script>
+</th:block>
+</html>
