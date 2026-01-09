@@ -37,13 +37,14 @@ public class WebsiteSettingController {
     private final String uploadDir = "uploads";
 
     @GetMapping("/setting")
-    public String getWebsiteSettingPage(Model model, Authentication authentication) {
+    public String getWebsiteSettingPage(Model model, Authentication authentication, @RequestParam(required = false) String showAuth) {
         User user = userService.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("用户不存在"));
 
         websiteSettingService.getWebsiteSettingByUserId(user.getId())
                 .ifPresent(setting -> model.addAttribute("setting", setting));
 
+        model.addAttribute("showAuth", "true".equals(showAuth)); // 只有当参数值为"true"时才显示认证按钮
         return "admin/setting";
     }
 

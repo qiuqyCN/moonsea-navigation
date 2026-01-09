@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class HomeController {
     private final FriendLinkService friendLinkService;
 
     @GetMapping("/")
-    public String index(Model model, Authentication authentication) {
+    public String index(Model model, Authentication authentication, @RequestParam(required = false) String showAuth) {
         List<Category> categories;
         boolean isAuthenticated = false;
 
@@ -47,24 +48,26 @@ public class HomeController {
 
         model.addAttribute("categories", categories);
         model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("showAuth", "true".equals(showAuth)); // 只有当参数值为"true"时才显示认证按钮
         model.addAttribute("activeTab", "home");
         return "index";
     }
 
     @GetMapping("/about")
-    public String about(Model model, Authentication authentication) {
+    public String about(Model model, Authentication authentication, @RequestParam(required = false) String showAuth) {
         User user = userService.getDefaultUser(authentication);
 
         // 获取网站设置信息
         Optional<WebsiteSetting> settingOpt = websiteSettingService.getWebsiteSettingByUserId(user.getId());
         settingOpt.ifPresent(websiteSetting -> model.addAttribute("setting", websiteSetting));
 
+        model.addAttribute("showAuth", "true".equals(showAuth)); // 只有当参数值为"true"时才显示认证按钮
         model.addAttribute("activeTab", "about");
         return "about";
     }
 
     @GetMapping("/links")
-    public String links(Model model, Authentication authentication) {
+    public String links(Model model, Authentication authentication, @RequestParam(required = false) String showAuth) {
         User user = userService.getDefaultUser(authentication);
 
         List<FriendLink> friendLinks = friendLinkService.getFriendLinksByUserId(user.getId());
@@ -73,6 +76,7 @@ public class HomeController {
         settingOpt.ifPresent(websiteSetting -> model.addAttribute("setting",  WebsiteSettingResponse.fromEntity(websiteSetting)));
 
         model.addAttribute("friendLinks", friendLinks);
+        model.addAttribute("showAuth", "true".equals(showAuth)); // 只有当参数值为"true"时才显示认证按钮
         model.addAttribute("activeTab", "links");
         return "links";
     }

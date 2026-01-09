@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -38,11 +39,12 @@ class StatsViewController {
     private final VisitRecordService visitRecordService;
 
     @GetMapping("/stats")
-    public String getStatsPage(Model model) {
+    public String getStatsPage(Model model, @RequestParam(required = false) String showAuth) {
         model.addAttribute("todayPv", visitRecordService.getTodayTotalVisits());
         model.addAttribute("todayUv", visitRecordService.getTodayUniqueVisitors());
         model.addAttribute("totalPv", visitRecordService.getTotalVisits());
         model.addAttribute("totalUv", visitRecordService.getTotalUniqueVisitors());
+        model.addAttribute("showAuth", "true".equals(showAuth)); // 只有当参数值为"true"时才显示认证按钮
         return "admin/stats";
     }
 }
